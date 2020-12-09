@@ -14,7 +14,6 @@
             post: Object
         }, methods: {
             like: function () {
-              console.log("Tere")
                 axios.put('posts/' + this.post.id + '/likes')
                     .then(() => {
                         this.post.liked = true;
