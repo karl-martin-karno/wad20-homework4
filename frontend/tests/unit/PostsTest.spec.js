@@ -100,7 +100,32 @@ describe('Posts', () => {
 
     const wrapper = mount(Posts, {router, store, localVue});
 
-    it('1 == 1', function () {
-        expect(true).toBe(true)
-    });
+    test('renders exact number', async () => {
+        expect(wrapper.findAll('.post').length).toBe(testData.length)
+    })
+
+    test('posts with media conain rendered media', () => {
+        let postAr = wrapper.findAll('.post')
+        for (let i = 0; i < postAr.length; i++) {
+            if (testData[i].media == null) {
+                expect(postAr.at(i).find('.post-image').exists()).toBeFalsy()
+            } else if (testData[i].media.type == "image") {
+                expect(postAr.at(i).find('.post-image').exists()).toBeTruthy()
+                expect(postAr.at(i).find('.post-image').find('img').exists()).toBeTruthy()
+                expect(postAr.at(i).find('video').exists()).toBeFalsy()
+            } else if (testData[i].media.type == "video") {
+                expect(postAr.at(i).find('.post-image').exists()).toBeTruthy()
+                expect(postAr.at(i).find('.post-image').find('img').exists()).toBeFalsy()
+                expect(postAr.at(i).find('video').exists()).toBeTruthy()
+            }
+        }
+    })
+
+    test('post time is displayed correctly', () => {
+        let postAr = wrapper.findAll('.post')
+        for (let i = 0; i < postAr.length; i++) {
+            let time = postAr.at(i).find('.post-author').findAll('small').at(1).text()
+            expect(time).toBe("Saturday, December 5, 2020 1:53 PM")
+        }
+    })
 });
